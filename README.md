@@ -1,32 +1,33 @@
 # Vault Namespaces
 
-Example of setting Vault up with least privilege, with shared Kubernetes authentication.
+Example of setting Vault Enterprise up with least privilege.
 
-In this demo, we use the following infrastructure:
+## Organizational (Namespace) Overview & Design
 
-- HashiCorp Vault Enterprise
-- Okta
+WAYNE Central Identity Cyber Team (WCICT) provides Vault as a service for these customer profiles:
 
-## Organizational (Namespace) Design
+- Self-Service, Vault as a Service (customer with a dedicated namespace and guard rails)
+- Fully Managed Vault consumer (Vault credentials vended through a system such as Developer portal, etc.)
 
 - Org name: Wayne Industries (WAYNE)
 - Sub organizations:
-    - ACME Co (ACME):
+    - ACME Co (`Self Service`):
       - ACME Widgets
       - ACME Retail
       - ACME Billing
-    - Omni Consumer Products (OCP) - a recent company acquisition 
-    - Oscorp (OSC), an established child company
+    - Omni Consumer Products (OCP) - a recent company acquisition `VaaS Vault as a Service`
+    - Oscorp (OSC), an established child company/brand `VaaS Vault as a Service`
 
 ### Teams
 
 - WAYNE Central Identity Cyber Team - owns and operates Vault as a Service for their customers
 - WAYNE FinOps - owns financial visibility into Vault
 
-WAYNE Central Identity Cyber Team (WCICT) provides Vault as a service for these customer profiles:
+## TODO
 
-- Self-Service, Vault as a Service (customer with a dedicated namespace and guard rails)
-- Fully Managed Vault consumer (Vault credentials vendeded through a system such as Developer portal, etc.)
+- Kubernetes
+- OIDC/Okta and role mapping
+- MFA
 
 ## References
 - https://developer.hashicorp.com/vault/tutorials/enterprise/namespace-structure

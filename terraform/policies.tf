@@ -1,4 +1,6 @@
-// Policies - these could be a module if needed
+// Policies - these could be a todo to make it a module
+
+// Super admin does everything
 
 data "vault_policy_document" "super_admin" {
   rule {
@@ -8,7 +10,7 @@ data "vault_policy_document" "super_admin" {
   }
 }
 
-// Namespace Admin
+// Organizational Admin
 
 data "vault_policy_document" "admin" {
   rule {
@@ -42,9 +44,9 @@ data "vault_policy_document" "admin" {
     description  = "Manage identity"
   }
   rule {
-    path         = "secret/*"
+    path         = "kv/*"
     capabilities = ["create", "read", "update", "delete", "list"]
-    description  = "Enable and manage the key/value secrets engine at `secret/` path"
+    description  = "Enable and manage the key/value secrets engine at `kv/` path"
   }
   rule {
     path         = "sys/leases/*"
@@ -67,13 +69,59 @@ data "vault_policy_document" "admin" {
     description  = "List existing secrets engines."
   }
   rule {
-    path         = "sys/license"
-    capabilities = ["create", "read", "update", "delete", "list"]
-    description  = "Configure license"
-  }
-  rule {
     path         = "sys/config/ui"
     capabilities = ["read", "update", "delete", "list"]
     description  = "Configure Vault UI"
+  }
+}
+
+// Sub org admin - very limited
+
+data "vault_policy_document" "sub_org_admin" {
+  rule {
+    path         = "sys/auth"
+    capabilities = ["list", "read"]
+    description  = "Read and list allowed auth methods"
+  }
+  rule {
+    path         = "/sys/auth/*"
+    capabilities = ["sudo", "create", "update", "delete"]
+    allowed_parameter {
+      key   = "type"
+      value = ["oidc"]
+    }
+    description = "Create allowed auth methods"
+  }
+  rule {
+    path         = "sys/mounts"
+    capabilities = ["list", "read"]
+    description  = "List allowed secrets engines"
+  }
+  rule {
+    path         = "sys/mounts/*"
+    capabilities = ["sudo", "create", "update", "delete", "list", "read"]
+    allowed_parameter {
+      key   = "type"
+      value = ["kv", "transit", "transform"]
+    }
+    allowed_parameter {
+      key   = "*"
+      value = []
+    }
+    description = "Manage allowed mount types"
+  }
+  rule {
+    path         = "kv/*"
+    capabilities = ["list", "read", "create", "update", "delete"]
+    description  = "Read and manage secrets under key/value"
+  }
+  rule {
+    path         = "transit/*"
+    capabilities = ["list", "read", "create", "update", "delete"]
+    description  = "Read and manage the transit secrets engine"
+  }
+  rule {
+    path         = "transform/*"
+    capabilities = ["list", "read", "create", "update", "delete"]
   }
 }

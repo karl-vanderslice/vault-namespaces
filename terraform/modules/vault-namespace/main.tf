@@ -1,7 +1,7 @@
 // Random pet
 
 resource "random_pet" "this" {
-    count = var.name != "" ? 1 : 0
+    count = var.name == null ? 1 : 0
 }
 
 // Locals
@@ -12,8 +12,11 @@ locals {
     namespace_name = replace(local.name, " ", "-")
 }
 
-// Actual namespace
+// Namespace
 
 resource "vault_namespace" "this" {
     path = local.namespace_name
+
+    namespace = var.parent_namespace
+
 }
